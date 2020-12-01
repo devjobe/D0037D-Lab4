@@ -28,7 +28,7 @@ My previous conclusion was to not use `basic_istream::operator >>` on `cin` dire
 reading line input as well. I thought maybe I had a different approach to make it work (easily) 
 this time but ended up just wasting my time.
 
-The end result of this became "Task1/Util.h"
+The end result of this became "Task1/Input.h"
 
 > How can the lab be improved?
 
