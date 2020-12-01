@@ -158,10 +158,7 @@ private:
   std::string_view view;
 
   void trim_comma() {
-    auto pos = view.find_first_not_of(", \t");
-    if (pos != view.npos) {
-      view.remove_prefix(pos);
-    }
+    view.remove_prefix(std::min(view.find_first_not_of(", \t"), view.size()));
   }
 };
 
