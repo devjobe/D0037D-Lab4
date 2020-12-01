@@ -169,10 +169,11 @@ in_range(std::pair<std::optional<int>, std::optional<int>> range,
   if (value) {
     auto v = *value;
     auto [min, max] = range;
-    if ((min && v < min) || (max && v > max)) {
+    if ((min && v < *min) || (max && v > *max)) {
       return {};
     }
   }
+  
   return value;
 }
 
@@ -183,7 +184,7 @@ in_range(std::pair<std::optional<float>, std::optional<float>> range,
   if (value) {
     auto v = *value;
     auto [min, max] = range;
-    if ((min && v < min) || (max && v > max)) {
+    if ((min && v < *min) || (max && v > *max)) {
       return {};
     }
   }
