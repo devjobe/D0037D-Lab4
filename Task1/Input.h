@@ -86,7 +86,7 @@ inline std::optional<float> input_f32(const char* prompt = "") {
   auto const trimmed = trim(input);
   if (trimmed.size()) {
     char *end;
-    float result = std::strtof(trimmed.data(), &end);
+    const float result = std::strtof(trimmed.data(), &end);
     if (end != trimmed.data() && trimmed.data() + trimmed.size() == end) {
       return result;
     }
