@@ -21,7 +21,7 @@ inline void cin_discard_pending() {
 
 // Trim " \t\r\n" from start
 inline std::string_view trim_start(std::string_view s) {
-  auto pos = s.find_first_not_of(" \t\r\n");
+  auto const pos = s.find_first_not_of(" \t\r\n");
   if (pos == s.npos) {
     return {};
   }
@@ -31,7 +31,7 @@ inline std::string_view trim_start(std::string_view s) {
 
 // Trim " \t\r\n" from end
 inline std::string_view trim_end(std::string_view s) {
-  auto pos = s.find_last_not_of(" \t\r\n");
+  auto const pos = s.find_last_not_of(" \t\r\n");
   if (pos == s.npos) {
     return {};
   }
@@ -68,8 +68,8 @@ inline std::string input_line(const char *prompt = "") {
 
 // Uses input_raw to parse an i32.
 inline std::optional<int> input_i32(const char *prompt = "") {
-  auto input = input_raw(prompt);
-  auto trimmed = trim(input);
+  auto const input = input_raw(prompt);
+  auto const trimmed = trim(input);
   if (trimmed.size()) {
     char *end;
     int result = std::strtol(trimmed.data(), &end, 10);    
@@ -82,8 +82,8 @@ inline std::optional<int> input_i32(const char *prompt = "") {
 
 // Uses input_raw to parse an f32.
 inline std::optional<float> input_f32(const char* prompt = "") {
-  auto input = input_raw(prompt);
-  auto trimmed = trim(input);
+  auto const input = input_raw(prompt);
+  auto const trimmed = trim(input);
   if (trimmed.size()) {
     char *end;
     float result = std::strtof(trimmed.data(), &end);
@@ -98,8 +98,8 @@ inline std::optional<float> input_f32(const char* prompt = "") {
 
 // Uses input_raw to parse case insensitivly true/false t/f 1/0 yes/no y/n
 inline std::optional<bool> input_bool(const char *prompt = "") {
-  auto input = input_raw(prompt);
-  auto trimmed = trim(input);
+  auto const input = input_raw(prompt);
+  auto const trimmed = trim(input);
   if (trimmed.size()) {
     if (like("true", trimmed) || like("yes", trimmed) || like("y", trimmed) || like("t", trimmed) || trimmed == "1")
       return true;
@@ -115,8 +115,8 @@ inline std::optional<bool> input_bool(const char *prompt = "") {
 // def: If no input was given.
 // false: For any other input.
 inline bool input_yesno(const char *prompt = "", bool def = false) {
-  auto input = input_raw(prompt);
-  auto trimmed = trim(input);
+  auto const input = input_raw(prompt);
+  auto const trimmed = trim(input);
   if (trimmed.size()) {
     if (like("true", trimmed) || like("yes", trimmed) || like("y", trimmed) ||
         like("t", trimmed) || trimmed == "1") {
@@ -140,7 +140,7 @@ public:
     trim_comma();
     if (view.size()) {
       char *end;
-      float result = std::strtof(view.data(), &end);
+      const float result = std::strtof(view.data(), &end);
       if (end != view.data()) {
         view.remove_prefix(end - view.data());
         return result;
@@ -152,7 +152,7 @@ public:
   bool has_input() const { return view.size() != 0; }
 
 private:
-  std::string input;
+  const std::string input;
   std::string_view view;
 
   void trim_comma() {
@@ -165,8 +165,8 @@ inline std::optional<int>
 in_range(std::pair<std::optional<int>, std::optional<int>> range,
          std::optional<int> value) {
   if (value) {
-    auto v = *value;
-    auto [min, max] = range;
+    auto const v = *value;
+    auto const [min, max] = range;
     if ((min && v < *min) || (max && v > *max)) {
       return {};
     }
@@ -180,8 +180,8 @@ inline std::optional<float>
 in_range(std::pair<std::optional<float>, std::optional<float>> range,
          std::optional<float> value) {
   if (value) {
-    auto v = *value;
-    auto [min, max] = range;
+    auto const v = *value;
+    auto const [min, max] = range;
     if ((min && v < *min) || (max && v > *max)) {
       return {};
     }
