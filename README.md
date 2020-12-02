@@ -28,7 +28,7 @@ My previous conclusion was to not use `basic_istream::operator >>` on `cin` dire
 reading line input as well. I thought maybe I had a different approach to make it work (easily) 
 this time but ended up just wasting my time.
 
-The end result of this became "Task1/Input.h"
+The end result of this became `Task1/Input.h`.
 
 > How can the lab be improved?
 
@@ -37,4 +37,5 @@ which I might do later.
 
 > Additionally, write an estimate how many hours you spent on this lab.
 
-About 1.5h, .5h, 1h and .5 for task 1, 2, 3, and 4 respectivly.
+About 1.5h, .5h, 1h and .5 for task 1, 2, 3, and 4 respectivly. 
+Spent another hour refactoring Input.h but I don't count it as part of the lab.
