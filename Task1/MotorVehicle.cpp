@@ -61,6 +61,10 @@ std::optional<std::vector<float>> tireDiametersFrom(Input& input) {
     it = *value;
   }
 
+  if (!input.empty()) {
+    return {};
+  }
+
   return diameters;
 }
 
