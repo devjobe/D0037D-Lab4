@@ -114,11 +114,17 @@ public:
   // Returns the remaining input on the line.
   std::string line() const { return std::string(this->view); }
 
+  constexpr bool empty() const { return view.size() == 0; }
+
+  // Parses a value, no more no less.
+  template <typename T> constexpr std::optional<T> maybe() {
+    return parse_input<T>(this->view);
+  }
 
   // Parses a value and checks that there is no remaining input
   template <typename T> constexpr std::optional<T> only() {
-    auto res = parse_input<T>(this->view);
-    if (view.size()) {
+    auto res = this->maybe<T>();
+    if (!this->empty()) {
       return {};
     }
     return res;
@@ -127,7 +133,7 @@ public:
   // Skips ", \t" and parses a value
   template <typename T> constexpr std::optional<T> elem() {
     view.remove_prefix(std::min(view.find_first_not_of(", \t"), view.size()));
-    return parse_input<T>(this->view);
+    return this->maybe<T>();
   }
 
   // Tries to case insenitive match pattern followed by end of input or
@@ -136,22 +142,19 @@ public:
     return remove_prefix_ciw(this->view, pattern);
   }
 
+
   // Returns true if input matches true, yes, y, or 1. If no input is
   // remaining/given then def is returned.
-  constexpr bool yesno(bool def = false) {
-    return view.size() ? (match_like("true") || match_like("yes") ||
-                          match_like("y") || match_like("1"))
-                       : def;
+  constexpr bool confirmation(bool def = false) {
+    if (!this->empty()) {
+      if ((match_like("true") || match_like("yes") || match_like("y") ||
+           match_like("1"))) {
+        return this->empty();
+      }
+      return false;
+    }
+    return def;
   }
-
-  /* Unused
-  // Parses a value
-  template <typename T> constexpr std::optional<T> maybe() {
-    return parse_input<T>(this->view);
-  }
-
-  constexpr bool empty() const { return view.size() == 0; }
-  */
 
 private:
   std::string input;

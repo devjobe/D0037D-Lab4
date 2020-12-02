@@ -12,7 +12,8 @@ int main() {
 
   Input input;
   for (;;) {
-    if (!input.prompt("\nDo you wish to enter another vehicle? [Yes] ").yesno(true))
+    if (!input.prompt("\nDo you wish to enter another vehicle? [Yes] ")
+             .confirmation(true))
       break;
 
     cout << "Ok. Please enter the details of the vehicle." << endl;
