@@ -117,14 +117,10 @@ inline std::optional<bool> input_bool(const char *prompt = "") {
 inline bool input_yesno(const char *prompt = "", bool def = false) {
   auto const input = input_raw(prompt);
   auto const trimmed = trim(input);
-  if (trimmed.size()) {
-    if (like("true", trimmed) || like("yes", trimmed) || like("y", trimmed) ||
-        like("t", trimmed) || trimmed == "1") {
-      return true;
-    }
-    return false;
-  }
-  return def;
+  return trimmed.size()
+             ? (like("true", trimmed) || like("yes", trimmed) ||
+                like("y", trimmed) || like("t", trimmed) || trimmed == "1")
+             : def;
 }
 
 
