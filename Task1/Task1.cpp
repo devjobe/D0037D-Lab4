@@ -10,13 +10,14 @@ int main() {
   cout << "You will repeatedly be asked to enter another vehicle. Simply press "
           "enter to accept or type anything else than yes to exit.";
 
+  Input input;
   for (;;) {
-    if (!input_yesno("\nDo you wish to enter another vehicle? [Yes] ", true))
+    if (!input.prompt("\nDo you wish to enter another vehicle? [Yes] ").yesno(true))
       break;
 
     cout << "Ok. Please enter the details of the vehicle." << endl;
 
-    auto vehicle = motorVehicleFromStdio();
+    auto vehicle = motorVehicleFrom(input);
 
     if (vehicle) {
       cout << "\nYou have successfully entered all the details for the "

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <optional>
+#include "Input.h"
 
 struct Engine {
   Engine(float sizeInLiters, int numberOfCylinders);
@@ -11,4 +11,4 @@ struct Engine {
   int numberOfCylinders;
 };
 
-std::optional<Engine> engineFromStdio();
+std::optional<Engine> engineFrom(util::Input& input);

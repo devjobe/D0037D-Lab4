@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "MotorVehicle.h"
-#include "Input.h"
 
 using namespace std;
 using namespace util;
@@ -43,18 +42,19 @@ void MotorVehicle::print() const {
 }
 
 
-std::optional<std::vector<float>> tireDiametersFromStdio() {
+std::optional<std::vector<float>> tireDiametersFrom(Input& input) {
 
-  auto count = in_range({1, {}}, input_i32("Number of tires: "));
+  auto count = in_range({1, {}}, input.prompt("Number of tires: ").only<int>());
   if (!count) {
     return {};
   }
-  repeated_input input("Enter diameter in meters for each tire (seperated by "
+  input.prompt("Enter diameter in meters for each tire (seperated by "
                        "comma and/or space): ");
+
   std::vector<float> diameters(static_cast<size_t>(*count), 0.0f);
   for (auto &it : diameters) {
     auto value =
-        in_range({std::numeric_limits<float>::epsilon(), {}}, input.f32());
+        in_range({std::numeric_limits<float>::epsilon(), {}}, input.elem<float>());
     if (!value) {
       return {};
     }
@@ -64,18 +64,18 @@ std::optional<std::vector<float>> tireDiametersFromStdio() {
   return diameters;
 }
 
-std::optional<MotorVehicle> motorVehicleFromStdio() {
-  auto engine = engineFromStdio();
+std::optional<MotorVehicle> motorVehicleFrom(Input& input) {
+  auto engine = engineFrom(input);
   if (!engine)
     return {};
-  auto body = bodyFromStdio();
+  auto body = bodyFrom(input);
   if (!body)
     return {};
-  auto owner = personFromStdio();
+  auto owner = personFrom(input);
   if (!owner)
     return {};
 
-  auto diameters = tireDiametersFromStdio();
+  auto diameters = tireDiametersFrom(input);
   if (!diameters)
     return {};
   auto &vec = *diameters;

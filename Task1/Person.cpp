@@ -2,8 +2,6 @@
 #include <iomanip>
 
 #include "Person.h"
-#include "Input.h"
-
 
 using namespace std;
 using namespace util;
@@ -19,17 +17,17 @@ void Person::print() const {
                                 : "The owner is not allowed to drive.\n");
 }
 
-std::optional<Person> personFromStdio() {
-  auto name = input_line("Owner: ");
+std::optional<Person> personFrom(util::Input& input) {
+  auto name = input.prompt("Owner: ").line();
   if (!name.size()) {
     return {};
   }
-  auto address = input_line("Owner address: ");
+  auto address = input.prompt("Owner address: ").line();
   if (!address.size()) {
     return {};
   }
 
-  auto allowedToDrive = input_bool("Licenced driver (yes/no): ");
+  auto allowedToDrive = input.prompt("Licenced driver (yes/no): ").only<bool>();
   if (!allowedToDrive.has_value()) {
     return {};
   }

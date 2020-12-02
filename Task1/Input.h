@@ -4,23 +4,16 @@ Utility functions handling line input.
 
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <optional>
 #include <algorithm>
+#include <iostream>
+#include <optional>
+#include <string>
 #include <string_view>
 
 namespace util {
 
-inline void cin_discard_pending() {
-  std::cin.sync();
-  std::cin.clear();
-  std::cin.seekg(0, std::ios_base::end);
-  std::cin.clear();
-}
-
 // Trim " \t\r\n" from start
-inline std::string_view trim_start(std::string_view s) {
+constexpr std::string_view trim_start(std::string_view s) {
   auto const pos = s.find_first_not_of(" \t\r\n");
   if (pos == s.npos) {
     return {};
@@ -30,7 +23,7 @@ inline std::string_view trim_start(std::string_view s) {
 }
 
 // Trim " \t\r\n" from end
-inline std::string_view trim_end(std::string_view s) {
+constexpr std::string_view trim_end(std::string_view s) {
   auto const pos = s.find_last_not_of(" \t\r\n");
   if (pos == s.npos) {
     return {};
@@ -38,126 +31,132 @@ inline std::string_view trim_end(std::string_view s) {
   return s.substr(0, pos + 1);
 }
 // Trim " \t\r\n" from start and end
-inline std::string_view trim(std::string_view s) {
+constexpr std::string_view trim(std::string_view s) {
   return trim_start(trim_end(s));
 }
 
 // Case insensitive compare
-inline bool like(std::string_view lhs, std::string_view rhs) {
+constexpr bool like(std::string_view lhs, std::string_view rhs) {
   return lhs.size() == rhs.size() &&
-         std::equal(
-             lhs.begin(), lhs.end(), rhs.begin(),
-             [](unsigned char a, unsigned char b) { return std::toupper(a) == std::toupper(b); });
+         std::equal(lhs.begin(), lhs.end(), rhs.begin(),
+                    [](unsigned char a, unsigned char b) {
+                      return std::toupper(a) == std::toupper(b);
+                    });
 }
 
-// Print out prompt to stdout and reads line from stdin.
-inline std::string input_raw(const char *prompt = "") {
-  std::cout << prompt;
-  std::string result;
-  std::getline(std::cin, result);
-  return result;
+// Tries to remove case insenitive word by matching pattern followed by end of
+// string or std::isspace
+constexpr bool remove_prefix_ciw(std::string_view &view,
+                                 std::string_view pattern) {
+  if (like(view.substr(0, pattern.size()), pattern) &&
+      (view.size() == pattern.size() ||
+       std::isspace(*(view.data() + pattern.size())))) {
+    view.remove_prefix(pattern.size());
+    return true;
+  } else {
+    return false;
+  }
 }
 
-// Retrieves a line from stdin using input_raw and returns the trimmed output.
-inline std::string input_line(const char *prompt = "") {
-  auto s = input_raw(prompt);
-  // Fixme
-  s = trim(s);
-  return s;
-}
+template <typename T> std::optional<T> parse_input(std::string_view &view);
 
-// Uses input_raw to parse an i32.
-inline std::optional<int> input_i32(const char *prompt = "") {
-  auto const input = input_raw(prompt);
-  auto const trimmed = trim(input);
-  if (trimmed.size()) {
+template <>
+constexpr std::optional<int> parse_input<int>(std::string_view &view) {
+  if (view.size()) {
     char *end;
-    const int result = std::strtol(trimmed.data(), &end, 10);    
-    if (end != trimmed.data() && trimmed.data() + trimmed.size() == end) {
+    const int result = std::strtol(view.data(), &end, 10);
+    if (end != view.data()) {
+      view.remove_prefix(end - view.data());
       return result;
     }
   }
   return {};
 }
 
-// Uses input_raw to parse an f32.
-inline std::optional<float> input_f32(const char* prompt = "") {
-  auto const input = input_raw(prompt);
-  auto const trimmed = trim(input);
-  if (trimmed.size()) {
+template <>
+constexpr std::optional<float> parse_input<float>(std::string_view &view) {
+  if (view.size()) {
     char *end;
-    const float result = std::strtof(trimmed.data(), &end);
-    if (end != trimmed.data() && trimmed.data() + trimmed.size() == end) {
+    const float result = std::strtof(view.data(), &end);
+    if (end != view.data()) {
+      view.remove_prefix(end - view.data());
       return result;
     }
   }
   return {};
 }
 
-
-
-// Uses input_raw to parse case insensitivly true/false t/f 1/0 yes/no y/n
-inline std::optional<bool> input_bool(const char *prompt = "") {
-  auto const input = input_raw(prompt);
-  auto const trimmed = trim(input);
-  if (trimmed.size()) {
-    if (like("true", trimmed) || like("yes", trimmed) || like("y", trimmed) || like("t", trimmed) || trimmed == "1")
+// Parse case insensitivly true/false 1/0 yes/no y/n
+template <>
+constexpr std::optional<bool> parse_input<bool>(std::string_view &view) {
+  if (view.size()) {
+    if (remove_prefix_ciw(view, "true") || remove_prefix_ciw(view, "yes") ||
+        remove_prefix_ciw(view, "y") || remove_prefix_ciw(view, "1")) {
       return true;
-    if (like("false", trimmed) || like("no", trimmed) || like("n", trimmed) || like("f", trimmed) || trimmed == "0")
+    }
+    if (remove_prefix_ciw(view, "false") || remove_prefix_ciw(view, "no") ||
+        remove_prefix_ciw(view, "n") || remove_prefix_ciw(view, "0")) {
       return false;
+    }
   }
   return {};
 }
 
-
-// Returns:
-// true: If given input from input_raw is true/yes/y/t/1 (case insensitivly).
-// def: If no input was given.
-// false: For any other input.
-inline bool input_yesno(const char *prompt = "", bool def = false) {
-  auto const input = input_raw(prompt);
-  auto const trimmed = trim(input);
-  return trimmed.size()
-             ? (like("true", trimmed) || like("yes", trimmed) ||
-                like("y", trimmed) || like("t", trimmed) || trimmed == "1")
-             : def;
-}
-
-
-
-// Handles multiple values on a single line seperated by space, tab or comma
-class repeated_input {
-
+class Input {
 public:
-  repeated_input(const char *prompt = "")
-      : input(input_raw(prompt)), view(trim(this->input)) {}
-
-  std::optional<float> f32() {
-    trim_comma();
-    if (view.size()) {
-      char *end;
-      const float result = std::strtof(view.data(), &end);
-      if (end != view.data()) {
-        view.remove_prefix(end - view.data());
-        return result;
-      }
-    }
-    return {};
+  Input &prompt(std::string_view prompt) {
+    std::cout << prompt;
+    std::getline(std::cin, this->input);
+    this->view = trim(this->input);
+    return *this;
   }
 
-  bool has_input() const { return view.size() != 0; }
+  // Returns the remaining input on the line.
+  std::string line() const { return std::string(this->view); }
+
+  // Parses a value
+  template <typename T> constexpr std::optional<T> maybe() {
+    return parse_input<T>(this->view);
+  }
+
+  // Parses a value and checks that there is no remaining input
+  template <typename T> constexpr std::optional<T> only() {
+    auto res = parse_input<T>(this->view);
+    if (view.size()) {
+      return {};
+    }
+    return res;
+  }
+
+  // Skips ", \t" and parses a value
+  template <typename T> constexpr std::optional<T> elem() {
+    view.remove_prefix(std::min(view.find_first_not_of(", \t"), view.size()));
+    return parse_input<T>(this->view);
+  }
+
+  // Tries to case insenitive match pattern followed by end of input or
+  // std::isspace.
+  constexpr bool match_like(std::string_view pattern) {
+    return remove_prefix_ciw(this->view, pattern);
+  }
+
+  // Returns true if input matches true, yes, y, or 1. If no input is
+  // remaining/given then def is returned.
+  constexpr bool yesno(bool def = false) {
+    return view.size() ? (match_like("true") || match_like("yes") ||
+                          match_like("y") || match_like("1"))
+                       : def;
+  }
+
+  constexpr bool empty() const { return view.size() == 0; }
 
 private:
-  const std::string input;
+  std::string input;
   std::string_view view;
-
-  void trim_comma() {
-    view.remove_prefix(std::min(view.find_first_not_of(", \t"), view.size()));
-  }
 };
 
 // Returns the optional value only if it's in the optional inclusive range.
-inline std::optional<int>
+constexpr std::optional<int>
 in_range(std::pair<std::optional<int>, std::optional<int>> range,
          std::optional<int> value) {
   if (value) {
@@ -167,12 +166,12 @@ in_range(std::pair<std::optional<int>, std::optional<int>> range,
       return {};
     }
   }
-  
+
   return value;
 }
 
 // Returns the optional value only if it's in the optional inclusive range.
-inline std::optional<float>
+constexpr std::optional<float>
 in_range(std::pair<std::optional<float>, std::optional<float>> range,
          std::optional<float> value) {
   if (value) {
@@ -184,6 +183,5 @@ in_range(std::pair<std::optional<float>, std::optional<float>> range,
   }
   return value;
 }
-
 
 } // namespace util

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <optional>
+#include "Input.h"
 
 struct Person {
   Person(std::string name, std::string address, bool allowedToDrive);
@@ -14,4 +14,4 @@ struct Person {
 };
 
 
-std::optional<Person> personFromStdio();
+std::optional<Person> personFrom(util::Input& input);

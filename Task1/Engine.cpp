@@ -17,15 +17,15 @@ void Engine::print() const {
        << " cylinder engine.\n";
 }
 
-std::optional<Engine> engineFromStdio() {
-  auto sizeInLiters =
-      in_range({0.0f, {}}, input_f32("Engine volume in liters: "));
+std::optional<Engine> engineFrom(util::Input &input) {
+  auto sizeInLiters = in_range(
+      {0.0f, {}}, input.prompt("Engine volume in liters: ").only<float>());
   if (!sizeInLiters) {
     return {};
   }
 
   auto numberOfCylinders =
-      in_range({0, {}}, input_i32("Number of cylinders: "));
+      in_range({0, {}}, input.prompt("Number of cylinders: ").only<int>());
   if (!numberOfCylinders) {
     return {};
   }

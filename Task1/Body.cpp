@@ -18,20 +18,22 @@ void Body::print() const {
        << this->width << " (m) wide and " << this->height << " (m) tall.\n";
 }
 
-std::optional<Body> bodyFromStdio() {
+std::optional<Body> bodyFrom(util::Input &input) {
 
-  auto color = input_line("Body color: ");
+  auto color = input.prompt("Body color: ").line();
   if (!color.size()) {
     return {};
   }
-  auto width = in_range({0.0f, {}}, input_f32("Body width: "));
+  auto width = in_range({std::numeric_limits<float>::epsilon(), {}},
+                        input.prompt("Body width: ").only<float>());
   if (!width) {
     return {};
   }
-  auto height = in_range({0.0f, {}}, input_f32("Body height: "));
+  auto height = in_range({std::numeric_limits<float>::epsilon(), {}},
+                         input.prompt("Body height: ").only<float>());
   if (!height) {
     return {};
   }
 
-  return Body{ std::move(color), *width, *height};
+  return Body{std::move(color), *width, *height};
 }

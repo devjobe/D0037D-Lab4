@@ -7,7 +7,7 @@
 #include "Engine.h"
 #include "Body.h"
 #include "Person.h"
-
+#include "Input.h"
 
 class MotorVehicle {
 public:
@@ -30,7 +30,7 @@ private:
 };
 
 
-std::optional<MotorVehicle> motorVehicleFromStdio();
+std::optional<MotorVehicle> motorVehicleFrom(util::Input& input);
 
 
 
