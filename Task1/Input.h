@@ -159,31 +159,17 @@ private:
 };
 
 // Returns the optional value only if it's in the optional inclusive range.
-constexpr std::optional<int>
-in_range(std::pair<std::optional<int>, std::optional<int>> range,
-         std::optional<int> value) {
+template <typename T>
+constexpr std::optional<T>
+in_range(std::pair<std::optional<T>, std::optional<T>> range,
+         std::optional<T> value) {
   if (value) {
-    auto const v = *value;
     auto const [min, max] = range;
-    if ((min && v < *min) || (max && v > *max)) {
+    if ((min && *value < *min) || (max && *value > *max)) {
       return {};
     }
   }
 
-  return value;
-}
-
-// Returns the optional value only if it's in the optional inclusive range.
-constexpr std::optional<float>
-in_range(std::pair<std::optional<float>, std::optional<float>> range,
-         std::optional<float> value) {
-  if (value) {
-    auto const v = *value;
-    auto const [min, max] = range;
-    if ((min && v < *min) || (max && v > *max)) {
-      return {};
-    }
-  }
   return value;
 }
 
