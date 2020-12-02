@@ -72,7 +72,7 @@ inline std::optional<int> input_i32(const char *prompt = "") {
   auto const trimmed = trim(input);
   if (trimmed.size()) {
     char *end;
-    int result = std::strtol(trimmed.data(), &end, 10);    
+    const int result = std::strtol(trimmed.data(), &end, 10);    
     if (end != trimmed.data() && trimmed.data() + trimmed.size() == end) {
       return result;
     }
