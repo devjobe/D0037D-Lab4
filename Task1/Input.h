@@ -114,10 +114,6 @@ public:
   // Returns the remaining input on the line.
   std::string line() const { return std::string(this->view); }
 
-  // Parses a value
-  template <typename T> constexpr std::optional<T> maybe() {
-    return parse_input<T>(this->view);
-  }
 
   // Parses a value and checks that there is no remaining input
   template <typename T> constexpr std::optional<T> only() {
@@ -148,7 +144,14 @@ public:
                        : def;
   }
 
+  /* Unused
+  // Parses a value
+  template <typename T> constexpr std::optional<T> maybe() {
+    return parse_input<T>(this->view);
+  }
+
   constexpr bool empty() const { return view.size() == 0; }
+  */
 
 private:
   std::string input;
