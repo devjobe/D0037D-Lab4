@@ -64,7 +64,7 @@ std::optional<std::vector<float>> tireDiametersFrom(Input& input) {
   return diameters;
 }
 
-std::optional<MotorVehicle> motorVehicleFrom(Input& input) {
+std::optional<MotorVehicle> motorVehicleFrom(Input &input) {
   auto engine = engineFrom(input);
   if (!engine)
     return {};
