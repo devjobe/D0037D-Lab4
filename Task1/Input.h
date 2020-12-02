@@ -56,8 +56,6 @@ inline std::string input_raw(const char *prompt = "") {
   std::string result;
   std::getline(std::cin, result);
   return result;
-  if (!result.size())
-    return {};
 }
 
 // Retrieves a line from stdin using input_raw and returns the trimmed output.
