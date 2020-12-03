@@ -30,7 +30,7 @@ CardDeck::CardDeck()
             {"", "Joker"},        {"", "Joker"},         {"", "Joker"}} {}
 
 void CardDeck::print() const {
-  for (int i = 0; i < 55; i++) {
+  for (int i = 0; i < NUM_CARDS_WITH_JOKERS; i++) {
     this->cards[i].print();
   }
 }
