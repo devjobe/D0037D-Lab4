@@ -2,11 +2,18 @@
 
 #include <iostream>
 
+// Ordered for Task 5
 static const int NUM_SUITS = 5;
-static const char* SUITS[NUM_SUITS] = { "", "clubs", "diamonds", "hearts", "spades" };
+static const char* SUITS[NUM_SUITS] = { 
+  "clubs", "diamonds", "hearts", "spades", "",
+};
 
+// Ordered for Task 5
 static const int NUM_RANKS = 14;
-static const char* RANKS[NUM_RANKS] = { "Joker", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
+static const char *RANKS[NUM_RANKS] = {
+    "2", "3",  "4",    "5",     "6",    "7",   "8",
+    "9", "10", "Jack", "Queen", "King", "Ace", "Joker",
+};
 
 static int find_suit(const char *suit) {
   for (int i = 0; i < NUM_SUITS; i++) {
@@ -43,7 +50,6 @@ Card::Card(const char *suit, const char *rank) {
   this->rank = r;
 }
 
-
 void Card::print() const {
   const char *suit = SUITS[this->suit];
   const char *rank = RANKS[this->rank];
@@ -53,3 +59,7 @@ void Card::print() const {
   else
     std::cout << rank << " of " << suit << std::endl;
 }
+
+
+
+bool Card::operator==(Card const &other) const { return this->rank == other.rank && this->suit == other.suit; }

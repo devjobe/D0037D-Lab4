@@ -34,3 +34,20 @@ void CardDeck::print() const {
     this->cards[i].print();
   }
 }
+
+Card const &CardDeck::operator[](size_t card) const {
+  if (card >= NUM_CARDS_WITH_JOKERS) {
+    std::cout << "CardDeck: Index of out range." << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+  return this->cards[card];
+}
+
+Card &CardDeck::operator[](size_t card) {
+  if (card >= NUM_CARDS_WITH_JOKERS) {
+    std::cout << "CardDeck: Index of out range." << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+  return this->cards[card];
+}
+

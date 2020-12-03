@@ -2,7 +2,7 @@
 
 ```yaml
 User: ojaebh-0  
-Time estimate: 4h
+Time estimate: 5h
 Difficulty rating: easy
 Visual Studio version: 2019
 ```
@@ -32,10 +32,15 @@ The end result of this became `Task1/Input.h`.
 
 > How can the lab be improved?
 
-Not much to say, it's fine as is. At the point of writing this I have not done the optional ones
-which I might do later.
+In Task 6, the function signature for `checkMissing` is unusable. There is no way to for
+the caller to know how many cards are in the array if all you return is a pointer.
+
+Since the last ones are optional maybe allow the student to choose a game to implement.
 
 > Additionally, write an estimate how many hours you spent on this lab.
 
-About 1.5h, .5h, 1h and .5 for task 1, 2, 3, and 4 respectivly. 
-Spent another hour refactoring Input.h but I don't count it as part of the lab.
+About 1.5h for task 1.
+About 1h for both 3 and 6.
+About 30min for 2, 4 and 5.
+Spent an hour refactoring Input.h but I don't count it as part of the lab.
+
