@@ -44,7 +44,7 @@ int sorting_order(Card const &a, Card const &b) {
 }
 
 void CardUtilities::sort(CardDeck *input) {
-  // some kind of sort? (slow sort?)
+  // naive insertion sort
   for (size_t sorted = 1; sorted < CardDeck::NUM_CARDS_WITH_JOKERS; ++sorted) {
     // bubble down
     for (size_t ndx = sorted; ndx > 0; --ndx) {
@@ -53,6 +53,8 @@ void CardUtilities::sort(CardDeck *input) {
 
       if (sorting_order(a, b) < 0) {
         swap(a, b);
+      } else {
+        break;
       }
     }
   }
