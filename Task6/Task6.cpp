@@ -22,16 +22,12 @@ using namespace std;
 
 void CardUtilities::shuffle(CardDeck *input) {
   random_device rand_dev;
-  auto index_dist =
-      uniform_int_distribution<size_t>(0, CardDeck::NUM_CARDS_WITH_JOKERS - 1);
   auto gen = default_random_engine(rand_dev());
 
-  // Swap every card slot with another random card slot (including itself).
-  for (size_t first_index = 0; first_index < CardDeck::NUM_CARDS_WITH_JOKERS;
-       ++first_index) {
-    auto second_index =
-        (first_index + index_dist(gen)) % CardDeck::NUM_CARDS_WITH_JOKERS;
-    swap((*input)[first_index], (*input)[second_index]);
+  // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+  for (size_t i = 0; i < CardDeck::NUM_CARDS_WITH_JOKERS - 1; i++) {
+    swap((*input)[i], (*input)[uniform_int_distribution<size_t>(
+                          i, CardDeck::NUM_CARDS_WITH_JOKERS - 1)(gen)]);
   }
 }
 
